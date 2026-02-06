@@ -1,0 +1,26 @@
+{
+  "name": "obie-skills",
+  "owner": {
+    "name": "Obie Fernandez",
+    "email": "obiefernandez@gmail.com"
+  },
+  "metadata": {
+    "description": "Curated collection of production-ready Claude Code skills",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "better-stimulus",
+      "source": "./skills/better-stimulus",
+      "description": "Apply Better Stimulus best practices for writing maintainable, reusable StimulusJS controllers following SOLID principles",
+      "version": "1.0.0",
+      "author": {
+        "name": "Obie Fernandez"
+      },
+      "keywords": ["stimulus", "hotwire", "rails", "javascript", "best-practices", "solid"],
+      "category": "development",
+      "homepage": "https://github.com/obie/skills",
+      "license": "MIT"
+    }
+  ]
+}

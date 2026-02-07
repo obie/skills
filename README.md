@@ -37,6 +37,26 @@ Apply opinionated best practices from [betterstimulus.com](https://betterstimulu
 
 **Invoke with:** `/better-stimulus` or Claude invokes automatically when working with Stimulus code
 
+### MCP OAuth Setup
+
+Implement zero-configuration OAuth for MCP (Model Context Protocol) server connections using Dynamic Client Registration (RFC 7591) and Authorization Server Metadata Discovery (RFC 8414). Battle-tested with Linear, Sentry, and Granola.
+
+**When to use:**
+- Building admin UIs for managing MCP server connections with OAuth
+- Integrating with third-party MCP providers
+- Implementing MCP Streamable HTTP transport with authenticated tool sync
+- Adding OAuth to an existing MCP connector management system
+
+**What it covers:**
+- RFC 8414 metadata discovery + RFC 7591 dynamic client registration
+- PKCE (S256) authorization flow with signed state
+- Token exchange, storage, and refresh (shared + per-agent modes)
+- MCP Streamable HTTP tool sync (session handshake, SSE parsing)
+- UI patterns (Stimulus forms, Connect vs Sync logic)
+- Common failure modes and fixes (Turbo Drive, route helpers, SSE)
+
+**Invoke with:** `/mcp-oauth-setup` or Claude invokes automatically when implementing MCP OAuth
+
 ## How It Works
 
 Skills are stored in `skills/<skill-name>/SKILL.md` format. Each skill:

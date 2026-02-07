@@ -1,9 +1,9 @@
-# Database Schema for MCP OAuth
+# Database Schema for MCP Authentication
 
 ## MCP Servers Table
 
 The primary table stores MCP server configuration, OAuth metadata from discovery,
-dynamically registered client credentials, and shared OAuth tokens.
+dynamically registered client credentials, and shared tokens.
 
 ### Migration
 
@@ -14,11 +14,14 @@ class CreateMcpServers < ActiveRecord::Migration
       t.string :name, null: false
       t.string :url, null: false
       t.string :auth_type, null: false, default: "none"
-      t.string :auth_token                  # Bearer token or API key
+      t.string :auth_token                  # Bearer token or API key (shared mode)
       t.string :auth_header_name            # Custom header name for API key auth
       t.jsonb :custom_headers, default: {}
       t.jsonb :discovered_tools, default: []
       t.datetime :tools_last_synced_at
+
+      # Credential mode: applies to ALL auth types, not just OAuth
+      t.string :credential_mode, default: "shared"  # "shared" or "per_agent"
 
       # OAuth fields (populated by discovery + registration)
       t.string :oauth_authorization_url     # From RFC 8414 discovery
@@ -26,7 +29,6 @@ class CreateMcpServers < ActiveRecord::Migration
       t.string :oauth_client_id             # From RFC 7591 registration
       t.string :oauth_client_secret         # From RFC 7591 registration
       t.string :oauth_scopes                # Space-separated, from discovery
-      t.string :oauth_credential_mode, default: "shared"  # "shared" or "per_agent"
       t.string :oauth_access_token          # Shared token (when mode = shared)
       t.string :oauth_refresh_token         # Shared refresh token
       t.datetime :oauth_token_expires_at    # Shared token expiry
@@ -39,10 +41,11 @@ class CreateMcpServers < ActiveRecord::Migration
 end
 ```
 
-## Agent MCP Connections Table (Per-Agent Tokens)
+## Agent MCP Connections Table (Per-Agent Credentials)
 
-When `oauth_credential_mode` is `"per_agent"`, each agent stores its own OAuth
-tokens in this join table.
+When `credential_mode` is `"per_agent"`, each agent stores its own credential
+in this join table. The `access_token` field stores OAuth tokens, bearer tokens,
+or API keys depending on the connector's auth_type.
 
 ```ruby
 class CreateAgentMcpConnections < ActiveRecord::Migration
@@ -50,9 +53,9 @@ class CreateAgentMcpConnections < ActiveRecord::Migration
     create_table :agent_mcp_connections do |t|
       t.references :agent, null: false, foreign_key: true
       t.references :mcp_server, null: false, foreign_key: true
-      t.string :access_token
-      t.string :refresh_token
-      t.datetime :token_expires_at
+      t.string :access_token          # Per-agent credential (any auth type)
+      t.string :refresh_token         # OAuth-specific
+      t.datetime :token_expires_at    # OAuth-specific
       t.timestamps
     end
 
@@ -87,8 +90,35 @@ class McpServer < ApplicationRecord
   validates :url, presence: true,
             format: { with: /\Ahttps?:\/\/.+/i, message: "must be an HTTP(S) URL" }
   validates :auth_header_name, presence: true, if: :api_key_header?
-  validates :oauth_credential_mode,
-            inclusion: { in: %w[shared per_agent] }, if: :oauth?
+  # credential_mode validates for ALL auth types, not just OAuth
+  validates :credential_mode,
+            inclusion: { in: %w[shared per_agent] }, if: :auth_configured?
+
+  # General credential mode helpers (auth-type-agnostic)
+  def shared_credentials?
+    credential_mode == "shared"
+  end
+
+  def per_agent_credentials?
+    credential_mode == "per_agent"
+  end
+
+  # OAuth-specific wrappers (check auth_type too)
+  def oauth_shared?
+    oauth? && shared_credentials?
+  end
+
+  def oauth_per_agent?
+    oauth? && per_agent_credentials?
+  end
+
+  def oauth_connected?
+    oauth? && oauth_access_token.present?
+  end
+
+  def auth_configured?
+    !no_auth?
+  end
 
   # Generate MCP tool names in the mcp__<server_key>__<tool> format
   def tool_names
@@ -99,18 +129,6 @@ class McpServer < ApplicationRecord
     name.downcase.gsub(/[^a-z0-9]/, "_")
   end
 
-  def oauth_shared?
-    oauth? && oauth_credential_mode == "shared"
-  end
-
-  def oauth_per_agent?
-    oauth? && oauth_credential_mode == "per_agent"
-  end
-
-  def oauth_connected?
-    oauth? && oauth_access_token.present?
-  end
-
   # Build the SDK config hash for Claude CLI's .mcp.json
   def to_sdk_config(agent: nil)
     config = { "type" => "http", "url" => url }
@@ -118,9 +136,11 @@ class McpServer < ApplicationRecord
 
     case auth_type
     when "bearer"
-      headers["Authorization"] = "Bearer #{resolve_credential(auth_token)}" if auth_token.present?
+      token = resolve_auth_token(agent)
+      headers["Authorization"] = "Bearer #{token}" if token.present?
     when "api_key_header"
-      headers[auth_header_name] = resolve_credential(auth_token) if auth_token.present?
+      token = resolve_auth_token(agent)
+      headers[auth_header_name] = token if token.present?
     when "oauth"
       token = resolve_oauth_token(agent)
       headers["Authorization"] = "Bearer #{token}" if token
@@ -128,6 +148,18 @@ class McpServer < ApplicationRecord
 
     config["headers"] = headers if headers.any?
     config
+  end
+
+  private
+
+  # Resolve bearer/API key token — checks per-agent first, falls back to shared
+  def resolve_auth_token(agent)
+    if per_agent_credentials? && agent
+      connection = agent_mcp_connections.find_by(agent: agent)
+      connection&.access_token
+    else
+      resolve_credential(auth_token) if auth_token.present?
+    end
   end
 end
 ```
@@ -153,6 +185,7 @@ class AgentMcpConnection < ApplicationRecord
     token_expires_at < 5.minutes.from_now
   end
 
+  # Only needed for OAuth per-agent tokens (bearer/API key tokens don't expire)
   def ensure_token_fresh!(mcp_server)
     return unless token_expiring_soon? && refresh_token.present?
 

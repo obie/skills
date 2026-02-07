@@ -5,6 +5,9 @@
 Fetch the provider's OAuth metadata from its well-known endpoint. The URL is derived
 from the MCP server's host (not the full path).
 
+**Important:** Not all MCP servers support OAuth discovery. Some (e.g., Render) return
+404. Handle this gracefully — those servers should use bearer or API key auth instead.
+
 ```ruby
 # On the McpServer model
 def discover_oauth_metadata!
@@ -145,7 +148,9 @@ def authorize
     )
   ), layout: false, content_type: "text/html"
 rescue => e
-  redirect_to connectors_path, alert: "OAuth setup failed: #{e.message}"
+  # Redirect back to the page the user came from
+  error_redirect = params[:agent_id].present? ? edit_agent_path(params[:agent_id]) : connectors_path
+  redirect_to error_redirect, alert: "OAuth setup failed: #{e.message}"
 end
 ```
 
@@ -181,6 +186,13 @@ def callback
       token_expires_at: token_data["expires_in"] ?
         Time.current + token_data["expires_in"].to_i.seconds : nil
     )
+
+    # Auto-sync tools on first agent connection for per-agent OAuth,
+    # using the agent's token since there's no shared admin token.
+    if connector.discovered_tools.blank?
+      connector.sync_tools!(agent: agent) rescue nil
+    end
+
     redirect_to edit_agent_path(agent), notice: "Connected to #{connector.name}."
   else
     # Shared token storage
@@ -288,10 +300,22 @@ def oauth_token_expiring_soon?
 end
 ```
 
-## Token Resolution (Shared vs Per-Agent)
+## Token Resolution (Generalized)
+
+For bearer/API key auth types, resolve per-agent or shared credentials:
 
 ```ruby
-# On the McpServer model
+# On the McpServer model — resolves bearer tokens and API keys
+def resolve_auth_token(agent)
+  if per_agent_credentials? && agent
+    connection = agent_mcp_connections.find_by(agent: agent)
+    connection&.access_token  # No refresh needed for static tokens
+  else
+    resolve_credential(auth_token) if auth_token.present?
+  end
+end
+
+# Resolves OAuth tokens with refresh support
 def resolve_oauth_token(agent)
   if oauth_shared?
     ensure_token_fresh!

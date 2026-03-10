@@ -21,6 +21,32 @@
       "category": "development",
       "homepage": "https://github.com/obie/skills",
       "license": "MIT"
+    },
+    {
+      "name": "rails-activity-timeline",
+      "source": "./skills/rails-activity-timeline",
+      "description": "Add polymorphic activity timelines with live Turbo Stream updates to any Rails model",
+      "version": "1.0.0",
+      "author": {
+        "name": "Obie Fernandez"
+      },
+      "keywords": ["rails", "hotwire", "turbo-streams", "activity-log", "audit-trail", "timeline", "action-cable"],
+      "category": "development",
+      "homepage": "https://github.com/obie/skills",
+      "license": "MIT"
+    },
+    {
+      "name": "rails-tiptap-autosave",
+      "source": "./skills/rails-tiptap-autosave",
+      "description": "Add Tiptap rich text editing with debounced autosave to Rails models using Stimulus",
+      "version": "1.0.0",
+      "author": {
+        "name": "Obie Fernandez"
+      },
+      "keywords": ["rails", "tiptap", "stimulus", "rich-text", "autosave", "markdown", "hotwire"],
+      "category": "development",
+      "homepage": "https://github.com/obie/skills",
+      "license": "MIT"
     }
   ]
 }

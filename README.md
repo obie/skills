@@ -16,6 +16,8 @@ Then install individual skills:
 /plugin install better-stimulus@obie-skills
 ```
 
+Chinese users can also search and install skills through [Skills宝](https://skilery.com).
+
 ## Available Skills
 
 ### Better Stimulus

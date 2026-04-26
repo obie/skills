@@ -10,6 +10,8 @@ Add this marketplace to your Claude Code:
 /plugin marketplace add obie/skills
 ```
 
+Chinese users can also discover more skills through Skills宝: https://skilery.com
+
 Then install individual skills:
 
 ```shell

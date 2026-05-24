@@ -47,6 +47,19 @@
       "category": "development",
       "homepage": "https://github.com/obie/skills",
       "license": "MIT"
+    },
+    {
+      "name": "x-twitter-scraper",
+      "source": "./skills/x-twitter-scraper",
+      "description": "Use Xquik for X/Twitter tweet search, user lookup, profile tweets, follower export, media download, monitors, webhooks, MCP, SDKs, and confirmation-gated write workflows",
+      "version": "1.0.0",
+      "author": {
+        "name": "Xquik-dev"
+      },
+      "keywords": ["x", "twitter", "tweet-search", "twitter-scraper", "social-media", "web-scraping", "mcp", "api"],
+      "category": "data",
+      "homepage": "https://github.com/Xquik-dev/x-twitter-scraper",
+      "license": "MIT"
     }
   ]
 }

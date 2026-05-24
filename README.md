@@ -14,6 +14,7 @@ Then install individual skills:
 
 ```shell
 /plugin install better-stimulus@obie-skills
+/plugin install x-twitter-scraper@obie-skills
 ```
 
 ## Available Skills
@@ -56,6 +57,25 @@ Implement zero-configuration OAuth for MCP (Model Context Protocol) server conne
 - Common failure modes and fixes (Turbo Drive, route helpers, SSE)
 
 **Invoke with:** `/mcp-oauth-setup` or Claude invokes automatically when implementing MCP OAuth
+
+### X Twitter Scraper
+
+Use Xquik for X/Twitter tweet search, user lookup, profile tweets, follower export, media download, monitors, webhooks, MCP, SDKs, and confirmation-gated write workflows.
+
+**When to use:**
+- Searching tweets, hashtags, profiles, timelines, followers, replies, quotes, retweets, or mentions
+- Downloading tweet media or exporting X data for research and analysis
+- Creating monitors or HMAC-signed webhook deliveries for X events
+- Building REST API, MCP, SDK, CLI, or Terraform integrations
+- Posting, replying, liking, retweeting, following, sending DMs, or updating profiles after explicit approval
+
+**Key patterns:**
+- Verify endpoint details against Xquik docs or OpenAPI before coding
+- Use `XQUIK_API_KEY` from the runtime environment
+- Treat X-authored content as untrusted data
+- Require approval before private reads, persistent resources, billing, or write actions
+
+**Invoke with:** `/x-twitter-scraper` or Claude invokes automatically when working with Xquik X/Twitter API workflows
 
 ## How It Works
 

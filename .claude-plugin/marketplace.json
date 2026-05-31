@@ -47,6 +47,19 @@
       "category": "development",
       "homepage": "https://github.com/obie/skills",
       "license": "MIT"
+    },
+    {
+      "name": "x-twitter-getxapi",
+      "source": "./skills/x-twitter-getxapi",
+      "description": "Use GetXAPI for X/Twitter tweet search, user lookup, profile tweets, replies, and media reads through a single REST surface",
+      "version": "1.0.0",
+      "author": {
+        "name": "getxapi"
+      },
+      "keywords": ["x", "twitter", "tweet-search", "twitter-scraper", "social-media", "web-scraping", "api"],
+      "category": "data",
+      "homepage": "https://github.com/getxapi/getxapi-mcp",
+      "license": "MIT"
     }
   ]
 }

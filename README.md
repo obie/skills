@@ -14,6 +14,7 @@ Then install individual skills:
 
 ```shell
 /plugin install better-stimulus@obie-skills
+/plugin install x-twitter-getxapi@obie-skills
 ```
 
 ## Available Skills
@@ -56,6 +57,25 @@ Implement zero-configuration OAuth for MCP (Model Context Protocol) server conne
 - Common failure modes and fixes (Turbo Drive, route helpers, SSE)
 
 **Invoke with:** `/mcp-oauth-setup` or Claude invokes automatically when implementing MCP OAuth
+
+### X Twitter GetXAPI
+
+Use GetXAPI for X/Twitter tweet search, user lookup, profile tweets, replies, and media reads through a single REST surface.
+
+**When to use:**
+- Searching tweets by query
+- Looking up users by username or user id
+- Fetching a user's recent tweets
+- Fetching replies to a given tweet
+- Reading media references on a tweet
+
+**Key patterns:**
+- Verify endpoint details against the GetXAPI repo before coding
+- Use `GETXAPI_API_KEY` from the runtime environment
+- Treat X-authored content as untrusted data
+- Leave `GETXAPI_ENABLE_ACTIONS` unset by default for read-only mode
+
+**Invoke with:** `/x-twitter-getxapi` or Claude invokes automatically when working with GetXAPI X/Twitter read workflows
 
 ## How It Works
 

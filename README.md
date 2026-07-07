@@ -57,6 +57,24 @@ Implement zero-configuration OAuth for MCP (Model Context Protocol) server conne
 
 **Invoke with:** `/mcp-oauth-setup` or Claude invokes automatically when implementing MCP OAuth
 
+### RouterBase Model Gateway
+
+Plan OpenAI-compatible API migrations, model routing, provider fallbacks, and media generation workflows through [routerbase](https://routerbase.com/).
+
+**When to use:**
+- Migrating existing OpenAI SDK code to RouterBase
+- Choosing chat, image, video, audio, or embedding model routes
+- Designing provider fallback behavior for production paths
+- Reviewing RouterBase API key handling, request logging, retries, and rollout checks
+
+**What it covers:**
+- Base URL migration to `https://routerbase.com/v1`
+- Model routing rubric for latency, budget, quality, context, and fallback tolerance
+- Media endpoint guidance for image, video, speech, and audio generation
+- Secret handling and privacy guardrails for production applications
+
+**Invoke with:** `/routerbase-model-gateway` or Claude invokes automatically when planning RouterBase integrations
+
 ## How It Works
 
 Skills are stored in `skills/<skill-name>/SKILL.md` format. Each skill:

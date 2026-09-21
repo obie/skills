@@ -17,7 +17,14 @@
       "author": {
         "name": "Obie Fernandez"
       },
-      "keywords": ["stimulus", "hotwire", "rails", "javascript", "best-practices", "solid"],
+      "keywords": [
+        "stimulus",
+        "hotwire",
+        "rails",
+        "javascript",
+        "best-practices",
+        "solid"
+      ],
       "category": "development",
       "homepage": "https://github.com/obie/skills",
       "license": "MIT"
@@ -30,7 +37,15 @@
       "author": {
         "name": "Obie Fernandez"
       },
-      "keywords": ["rails", "hotwire", "turbo-streams", "activity-log", "audit-trail", "timeline", "action-cable"],
+      "keywords": [
+        "rails",
+        "hotwire",
+        "turbo-streams",
+        "activity-log",
+        "audit-trail",
+        "timeline",
+        "action-cable"
+      ],
       "category": "development",
       "homepage": "https://github.com/obie/skills",
       "license": "MIT"
@@ -43,7 +58,39 @@
       "author": {
         "name": "Obie Fernandez"
       },
-      "keywords": ["rails", "tiptap", "stimulus", "rich-text", "autosave", "markdown", "hotwire"],
+      "keywords": [
+        "rails",
+        "tiptap",
+        "stimulus",
+        "rich-text",
+        "autosave",
+        "markdown",
+        "hotwire"
+      ],
+      "category": "development",
+      "homepage": "https://github.com/obie/skills",
+      "license": "MIT"
+    },
+    {
+      "name": "deletion-test",
+      "source": "./skills/deletion-test",
+      "description": "Run the regenerative-software deletion test on a component: extract intent and decision records, write a durable contract spec, mutation-test both oracles, regenerate the implementation in isolated arms, score by behavioral diff, and report evaluation gaps",
+      "version": "0.1.0",
+      "author": {
+        "name": "Obie Fernandez"
+      },
+      "keywords": [
+        "regenerative-software",
+        "deletion-test",
+        "mutation-testing",
+        "mutant",
+        "provenance",
+        "decision-records",
+        "evaluations",
+        "ruby",
+        "rails",
+        "feelings"
+      ],
       "category": "development",
       "homepage": "https://github.com/obie/skills",
       "license": "MIT"

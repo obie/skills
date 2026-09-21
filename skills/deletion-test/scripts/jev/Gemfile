@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+# Judge dependencies for survivor triage. Both gems are on RubyGems.
+# Set FEELINGS_GEM_PATH / RUBY_DECISION_MODEL_GEM_PATH to develop against
+# local checkouts instead.
+source "https://rubygems.org"
+
+if ENV["FEELINGS_GEM_PATH"]
+  gem "feelings", path: ENV["FEELINGS_GEM_PATH"]
+else
+  gem "feelings", "~> 0.1"
+end
+
+if ENV["RUBY_DECISION_MODEL_GEM_PATH"]
+  gem "ruby_decision_model", path: ENV["RUBY_DECISION_MODEL_GEM_PATH"]
+else
+  gem "ruby_decision_model", "~> 0.1"
+end

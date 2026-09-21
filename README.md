@@ -57,6 +57,26 @@ Implement zero-configuration OAuth for MCP (Model Context Protocol) server conne
 
 **Invoke with:** `/mcp-oauth-setup` or Claude invokes automatically when implementing MCP OAuth
 
+### Deletion Test
+
+Run the deletion test from Chad Fowler's *Regenerative Software* on one component: could we delete this and rebuild it from what the system holds outside the code? Extracts intent and decision records from code, history, and tickets; writes a durable contract spec that asserts promises rather than pinned numbers; mutation-tests both oracles; deletes the implementation and regenerates it in isolated arms from the intent alone; scores every candidate by behavioral diff; reports what the code knew that nothing else did.
+
+**When to use:**
+- Making a component safely replaceable, or finding out whether it already is
+- Extracting the reasons buried in a legacy module's comments, commits, and tickets
+- Checking whether a test suite is an oracle or a museum of the current implementation
+- Establishing a baseline before adopting regeneration tooling
+
+**What it covers:**
+- Intent document and decision-record formats, with the sparse variant for a decisions-withheld arm
+- Durable contract specs: properties over grids, the language-change membership test, degenerate inputs
+- mutant two-pass scoring with a survivor classification table
+- Isolated regeneration arms in git worktrees with a regenerator brief
+- Behavioral-diff scoring scripts and a findings template
+- Optional survivor triage with a calibrated decision model (feelings / Jev)
+
+**Invoke with:** `/deletion-test` or Claude invokes automatically when asked to regenerate a module from spec or make a component replaceable
+
 ## How It Works
 
 Skills are stored in `skills/<skill-name>/SKILL.md` format. Each skill:

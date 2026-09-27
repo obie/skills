@@ -19,19 +19,19 @@
 # Wrap any live/DB read in a rescue so a missing dev fixture doesn't blow
 # up the whole run; warn and continue with what you have.
 #
-# Worked example (from the Openrouter::ContextWindowEnv pilot):
+# Worked example (from the ContextWindowEnv pilot):
 #
 #   def shapes
 #     ids = %w[x-ai/grok-4.6 google/gemini-3.7-pro anthropic/claude-opus-5]
-#     catalog = Openrouter::ModelCatalog.new
+#     catalog = Catalog.new
 #     result = ids.to_h { |id| [id, { "raw" => catalog.context_length(id), "cap" => catalog.max_completion_tokens(id) }] }
 #     begin
-#       Legate.where.not(custom_model_id: [nil, ""]).distinct.pluck(:custom_model_id).each do |m|
+#       AgentProfile.where.not(custom_model_id: [nil, ""]).distinct.pluck(:custom_model_id).each do |m|
 #         bare = m.sub(%r{@preset/.*\z}, "")
 #         result[bare] ||= { "raw" => catalog.context_length(bare), "cap" => catalog.max_completion_tokens(bare) }
 #       end
 #     rescue StandardError => e
-#       warn "legate scan skipped: #{e.class}: #{e.message}"
+#       warn "profile scan skipped: #{e.class}: #{e.message}"
 #     end
 #     result
 #   end

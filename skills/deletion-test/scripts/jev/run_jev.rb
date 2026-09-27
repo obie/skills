@@ -33,6 +33,18 @@
 #                         via MODULE_PURPOSE_FILE.
 #   MODULE_PURPOSE_FILE - path to a text file containing the purpose
 #                         paragraph, alternative to MODULE_PURPOSE.
+#   WHOLE_MODULE_CONTEXT - "1" hands the judge the whole module's source
+#                         (module_source) instead of just the mutated
+#                         method's body, so it can trace values through
+#                         other methods; unset or any other value keeps the
+#                         default, method-only context (method_source).
+#                         Whole-module context is opt-in, not the default,
+#                         because it cost more false negatives than it
+#                         fixed on the second calibration run. Run both
+#                         settings and compare (see
+#                         ../../references/jev-triage.md, "Second run") —
+#                         do not assume either one is better on your
+#                         module without running both.
 
 require "bundler/setup"
 require "feelings"
@@ -72,19 +84,34 @@ LABELS = {
 
 NOUL_DESCRIPTION = "changes observable behavior for some realistic input"
 
+WHOLE_MODULE = ENV["WHOLE_MODULE_CONTEXT"] == "1"
+
 def build_value(mutant)
   subject_label = NAMESPACE.empty? ? mutant["subject"] : "#{NAMESPACE}.#{mutant["subject"]}"
 
-  <<~VALUE
-    Module purpose:
-    #{MODULE_PURPOSE}
+  if WHOLE_MODULE && mutant["module_source"]
+    <<~VALUE
+      Module purpose:
+      #{MODULE_PURPOSE}
 
-    Original source of the mutated method (#{subject_label}):
-    #{mutant["method_source"] || "(source not found for this subject)"}
+      Full source of the module containing the mutated method (#{subject_label}):
+      #{mutant["module_source"]}
 
-    Mutant diff (unified diff against the method above):
-    #{mutant["diff"]}
-  VALUE
+      Mutant diff (unified diff against the mutated method, #{subject_label}, within the module above):
+      #{mutant["diff"]}
+    VALUE
+  else
+    <<~VALUE
+      Module purpose:
+      #{MODULE_PURPOSE}
+
+      Original source of the mutated method (#{subject_label}):
+      #{mutant["method_source"] || "(source not found for this subject)"}
+
+      Mutant diff (unified diff against the method above):
+      #{mutant["diff"]}
+    VALUE
+  end
 end
 
 replay_mode = ARGV.include?("--replay")

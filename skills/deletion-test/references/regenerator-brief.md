@@ -7,14 +7,14 @@ the worked example. Keep the isolation rules verbatim.
 ## Preparing an arm
 
 ```bash
-git worktree add -q --detach /path/agentus-arm-A HEAD
-cp app/config/master.key /path/agentus-arm-A/app/config/   # if Rails needs it
-cp spec/.../component_contract_spec.rb /path/agentus-arm-A/app/spec/.../
+git worktree add -q --detach /path/app-arm-A HEAD
+cp app/config/master.key /path/app-arm-A/app/config/   # if Rails needs it
+cp spec/.../component_contract_spec.rb /path/app-arm-A/app/spec/.../
 # verify the contract spec runs there against the ORIGINAL first
-rm /path/agentus-arm-A/app/app/.../component.rb
-rm /path/agentus-arm-A/app/spec/.../component_spec.rb
-mkdir /path/agentus-arm-A/app/regeneration
-cp intent.md /path/agentus-arm-A/app/regeneration/intent.md        # or intent-sparse.md for arm C
+rm /path/app-arm-A/app/app/.../component.rb
+rm /path/app-arm-A/app/spec/.../component_spec.rb
+mkdir /path/app-arm-A/app/regeneration
+cp intent.md /path/app-arm-A/app/regeneration/intent.md        # or intent-sparse.md for arm C
 ```
 
 Worktrees carry only committed files. Anything you wrote on the

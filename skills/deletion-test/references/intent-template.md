@@ -10,6 +10,15 @@ call sites, and vendor or runtime facts you can verify.
 Write it before the contract spec. The contract spec then tests the
 invariants; the intent explains them.
 
+## Revision log
+
+Once the intent has driven a shipped regeneration, the next change edits
+this document again rather than starting over. Keep a log at the top:
+one line per revision, what changed and why. A regenerator reading
+revision 4 cold cannot see the questions that produced it unless the log
+says so, and the log is also how a reviewer checks that a change was made
+in the intent first rather than patched into the generated code.
+
 ## Sections
 
 ### 1. Scope
@@ -29,10 +38,33 @@ Include the dependency API precisely: method names, return types, which
 calls can raise, what a degenerate answer looks like (zero, a cap above
 the window, a string where an integer is expected).
 
+**Type rules.** "Numeric" is not a type rule. Say Integer, and say what
+happens to every other input: a Float, a String, a stringified number.
+Say it separately for every source the value can arrive from (a catalog
+answer, a stored profile value, a caller argument): a regenerator will
+apply a stated rule to the source it was stated for and guess about the
+others, and different regenerators guess differently.
+
+State any persisted format here as a fact, not a decision, and give it
+exactly: a cache key, a queue name, a file path, a serialized shape, an
+env var's spelling, anything a previous deploy wrote or another process
+reads. These pass the membership test that separates facts from decisions
+(would another language need it anyway) and would still get invented fresh,
+each internally consistent, by every regeneration that only has a
+description of the shape to go on. Say what wrote it and what still reads
+it, so a regenerator understands why the exact spelling is not theirs to
+pick.
+
 ### 3. Public surface
 
 A table of methods with signatures and return types, and the list of
 published constants. This is the boundary. Nothing behind it is promised.
+
+Before writing the published-constants list, grep every caller for
+`Module::CONSTANT`. An omission here survives revision after revision: a
+regenerator that finds the call site publishes the constant anyway and
+asks in its notes whether the omission was deliberate, and the question
+gets answered the same way every round unless someone runs the grep.
 
 ### 4. Invariants
 
@@ -42,7 +74,7 @@ Number them. Each has three parts:
 - **What must remain true**: stated at the boundary, in terms of inputs and
   outputs or emitted effects, never in terms of internal structure.
 - **Why**: the incident, the constraint, the vendor behavior. Link the
-  decision id. Name the legate, customer, or system that paid for the
+  decision id. Name the profile, customer, or system that paid for the
   lesson; a future reader weighs a rule differently when it has a casualty
   attached.
 
@@ -50,7 +82,11 @@ Negative constraints first: what the component must never do. Then
 ordering constraints (a filling session must hit the recoverable guard
 before the hard one). Then resolution rules (where numbers come from, in
 what order, what counts as no answer). Then non-functional promises (at
-most one read of a shared cache per call). Then degenerate-input rules.
+most one read of a shared cache per call, **including read order**: when
+two or more of those reads are independent and either can fail on its
+own, say which one happens first and why, since that order decides which
+value survives a partial failure and a grid of inputs where every read
+succeeds cannot surface the wrong order). Then degenerate-input rules.
 
 Mark time-bound invariants as such, with the condition that expires them.
 

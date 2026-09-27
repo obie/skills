@@ -7,7 +7,11 @@
 # old oracle have accepted this" check, runs a linter, runs the behavioral
 # dump against the baseline, diffs it, and restores the original file no
 # matter what happens (trap on EXIT) so a scoring run can never leave the
-# tree mutated.
+# tree mutated. The dump step (both here and for the baseline you produce
+# before scoring any arm) is run through run_baseline_wrapper.rb, which
+# wraps DUMP_SCRIPT in one outer transaction that's always rolled back —
+# without it, a probe that creates records under a uniqueness constraint
+# leaves rows behind that break the next dump run, baseline or candidate.
 #
 # <config.sh> is a small shell file, specific to the component under test,
 # that sets these variables before this script runs its steps:
@@ -25,18 +29,21 @@
 #                     app's environment, e.g. "bin/rails runner"
 #   DUMP_PROBE        absolute path to the probe.rb for scripts/dump.rb
 #   DUMP_SCRIPT       absolute path to scripts/dump.rb (this dir, usually)
-#   BASELINE_JSON     absolute path to the baseline dump.rb output (produce
+#   BASELINE_JSON     absolute path to the baseline dump.rb output — produce
 #                     this once against the original implementation before
-#                     scoring any arm)
+#                     scoring any arm, through run_baseline_wrapper.rb, the
+#                     same way this script produces each arm's dump:
+#                       $RUNNER_CMD $(dirname "$DUMP_SCRIPT")/run_baseline_wrapper.rb \
+#                         "$DUMP_PROBE" "$IMPL_PATH" "$BASELINE_JSON" "$DUMP_SCRIPT"
 #
 # Example config.sh:
 #
 #   PROJECT_ROOT=/path/to/app
 #   RUBY_BIN_DIR=$HOME/.local/share/mise/installs/ruby/4.0.5/bin
-#   IMPL_PATH=$PROJECT_ROOT/app/services/openrouter/context_window_env.rb
+#   IMPL_PATH=$PROJECT_ROOT/app/services/llm/context_window_env.rb
 #   CANDIDATES_DIR=/path/to/experiment/candidates
-#   CONTRACT_SPEC=spec/services/openrouter/context_window_env_contract_spec.rb
-#   ORIGINAL_SPEC=spec/services/openrouter/context_window_env_spec.rb
+#   CONTRACT_SPEC=spec/services/llm/context_window_env_contract_spec.rb
+#   ORIGINAL_SPEC=spec/services/llm/context_window_env_spec.rb
 #   RUNNER_CMD="bin/rails runner"
 #   DUMP_PROBE=/path/to/experiment/dump_probe.rb
 #   DUMP_SCRIPT=/path/to/deletion-test/scripts/dump.rb
@@ -101,7 +108,8 @@ echo "== lint"
 bundle exec rubocop "$IMPL_PATH" 2>&1 | tail -1
 
 echo "== behavioral dump"
-$RUNNER_CMD "$DUMP_SCRIPT" "$DUMP_PROBE" "$IMPL_PATH" "$OUT/dump.json" 2>&1 | tail -3
+WRAPPER="$(dirname "$0")/run_baseline_wrapper.rb"
+$RUNNER_CMD "$WRAPPER" "$DUMP_PROBE" "$IMPL_PATH" "$OUT/dump.json" "$DUMP_SCRIPT" 2>&1 | tail -3
 
 python3 - "$BASELINE_JSON" "$OUT/dump.json" <<'PY' | tee "$OUT/diff.txt"
 import json, sys

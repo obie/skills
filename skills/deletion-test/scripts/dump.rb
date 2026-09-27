@@ -44,7 +44,7 @@
 #     # Array of method-name symbols/strings to call for every input.
 #   end
 #
-# Worked example (from the Openrouter::ContextWindowEnv pilot) is in
+# Worked example (from the ContextWindowEnv pilot) is in
 # references/scoring.md, "Building the grid (the probe)".
 
 probe_path, impl_path, out_path = ARGV

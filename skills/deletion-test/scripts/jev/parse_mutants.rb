@@ -27,6 +27,20 @@
 #                       to the alive-mutants report. Defaults to
 #                       "mutation/contract_spec_alive.txt" under
 #                       EXPERIMENT_DIR. May also be passed as ARGV[0].
+#   HAND_LABELS      - optional. Path to a labels.json (array of
+#                       {"mutant_id", "label"} objects, label one of
+#                       equivalent/log_only/dead_code/evaluation_gap/
+#                       deliberate_hole) written during survivor review. When
+#                       set, classification reads from this file instead of
+#                       the rule block below: evaluation_gap collapses to
+#                       "behavior_change", dead_code and deliberate_hole both
+#                       collapse to "equivalent" (both mean no realistic
+#                       input distinguishes the mutant), log_only passes
+#                       through, and equivalent passes through. A mutant
+#                       missing from the file aborts the run rather than
+#                       silently defaulting. When HAND_LABELS is unset, the
+#                       rule-based `classify` block further down is used
+#                       instead; adapt that block per module as before.
 
 require "json"
 
@@ -57,7 +71,7 @@ def extract_methods(source_lines, method_name_pattern)
   current_lines = []
   depth = 0
   in_method = false
-  def_re = /^\s*def\s+(#{method_name_pattern})/
+  def_re = /^\s*def\s+(?:self\.)?(#{method_name_pattern})/
 
   source_lines.each do |line|
     if !in_method && line =~ def_re
@@ -154,7 +168,20 @@ end
 #
 # Anything not matched falls through to "equivalent" — verify that default
 # is actually the right most-common-case for your module before trusting it.
-def classify(m)
+def classify_from_hand_labels(m, path)
+  @labels ||= JSON.parse(File.read(path)).to_h { |e| [e["mutant_id"], e["label"]] }
+  hash = m[:id].split(":").last
+  label = @labels.fetch(hash) { abort "No hand label for mutant #{m[:id]}" }
+  # Collapse the five hand classes onto the judge's three: dead_code and
+  # deliberate_hole both mean "no realistic input distinguishes the mutant".
+  case label
+  when "evaluation_gap" then "behavior_change"
+  when "log_only" then "log_only"
+  else "equivalent"
+  end
+end
+
+def classify_by_rule(m)
   changed = m[:changed]
   changed_text = changed.join("\n")
 
@@ -171,18 +198,32 @@ def classify(m)
   # Example rule 2 (textual) and rule 3 (subject-scoped), combined as in
   # the original pilot:
   if changed_text.include?("raw / 5") ||
-     changed_text.include?("legate: nil") ||
+     changed_text.include?("profile: nil") ||
      (m[:subject] == "raw_window_for" && changed.any? { |l| l.include?("value.is_a?(Numeric) && value.positive?") })
     return "behavior_change"
   end
 
   "equivalent"
 end
+
+def classify(m)
+  hand_labels_path = ENV["HAND_LABELS"]
+  return classify_from_hand_labels(m, hand_labels_path) if hand_labels_path
+
+  classify_by_rule(m)
+end
 # === END ADAPT ==============================================================
+
+module_source_text = File.read(SOURCE)
 
 mutants.each do |m|
   m[:hand_label] = classify(m)
   m[:method_source] = method_bodies[m[:subject]]
+  # Carries the full module source alongside the mutated method's body so
+  # run_jev.rb can hand the judge whole-module context (WHOLE_MODULE_CONTEXT)
+  # instead of only the mutated method's body, for the two-context run in
+  # ../../references/jev-triage.md ("Second run").
+  m[:module_source] = module_source_text
 end
 
 puts "Total mutants: #{mutants.size}"

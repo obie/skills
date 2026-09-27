@@ -1,0 +1,21 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    feelings (0.1.0)
+      ruby_decision_model (~> 0.1)
+    ruby_decision_model (0.1.0)
+
+PLATFORMS
+  arm64-darwin-24
+  ruby
+
+DEPENDENCIES
+  feelings (~> 0.1)
+  ruby_decision_model (~> 0.1)
+
+CHECKSUMS
+  feelings (0.1.0) sha256=b8b9f5ecd1055be0980fda7fd56caa3b6997a14ac053a66d97ae748f8714932a
+  ruby_decision_model (0.1.0) sha256=8950b34961fef8870582121b045de52be6194f5ee29d555b2d28dc5836dae97d
+
+BUNDLED WITH
+  4.0.10

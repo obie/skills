@@ -23,10 +23,40 @@ Consequences of taking that seriously:
   rule) may be referenced by name, because they are facts, not decisions.
   Restate them in the spec header so the geometry is checkable without
   reading the subject.
+- A persisted format passes the membership test and still needs a pinned
+  literal, not just a described shape. A cache key, a queue name, a file
+  path, a serialized payload's field names, an env var's spelling: any
+  string a previous deploy wrote somewhere else, or that another process
+  reads, is an external contract even though nothing about the language
+  or algorithm depends on its exact spelling. Reimplementing the component
+  in another language would not change what that string has to be, so the
+  test alone can miss it; it earns a literal assertion because a
+  regenerator left free to choose is not choosing in a vacuum, it is
+  choosing against whatever the last deploy already committed to disk. A
+  spec that only describes the shape ("a string key derived from the
+  session id") lets every regeneration invent its own spelling, each one
+  internally consistent and each one incompatible with whatever state is
+  already sitting in the store under the old spelling.
 - Decision values (a margin, a ceiling, a divisor) are deliberately
   unpinned. Write down which. A regeneration that changes one passes this
   spec and is caught only by the behavioral diff. That is a design choice
   you are making; make it explicitly.
+
+When a survivor-driven example is about to pin what the original does on a
+degenerate input, check that behavior against the intent's invariant
+first. The two can disagree: one contract's draft example pinned a
+fallback method's behavior on a store whose increment can't create a key
+(a second call left the count unchanged, matching what the code actually
+does), but the module's stated invariant promised the count after every
+increment, which the code does not deliver in that case. Asserting the
+pinned behavior would have made the contract a description of a
+degenerate-store bug rather than a check of the promise. The fix was to
+assert the invariant instead — the first count is exactly what's promised,
+never lost, always under the published expiry — and record the
+disagreement as a finding rather than silently picking a side. Do this
+whenever a survivor forces a choice between what the code does on an input
+nobody who wrote the invariant was thinking about and what the invariant
+says should happen: assert the invariant, and write the disagreement down.
 
 ## Structure that worked
 

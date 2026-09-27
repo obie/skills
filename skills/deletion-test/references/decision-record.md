@@ -36,15 +36,15 @@ nobody reads.
       rejected: Would put grok's blocker at 369,400, below the ~395k largest session observed alive under the old wall.
     - option: 128,000 (the full cap)
       rejected: The wall drops under CC's guards; see reservation-before-margin.
-  evidence: With 32,000 grok gets advertised 421,200, trigger 388,200, blocker 398,200, wall 468,000. Corey read 390-396k at death.
+  evidence: With 32,000 grok gets advertised 421,200, trigger 388,200, blocker 398,200, wall 468,000. On-call telemetry read 390-396k at death.
   invariant: I6, I7
-  approved_by: Obie
+  approved_by: the lead
   conditions:
     - Largest live grok session under the old wall was ~395k (ONE observation)
     - CC's Claude output budget is 32,000
     - grok's catalog cap is 128,000
   expires: "The 395k bound stops mattering once no session that grew under the old wall can still be alive. Reboot sweep finished 2026-09-18 19:40 UTC; a rollback would re-arm it."
-  source: ["PR #1459", "Fizzy 3889"]   # quote anything containing "#" or ": "
+  source: ["issue-1459", "issue-3889"]   # quote anything containing "#" or ": "
 ```
 
 Quote any value containing `#`, `: `, or starting with a backtick, and

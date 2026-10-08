@@ -94,6 +94,27 @@
       "category": "development",
       "homepage": "https://github.com/obie/skills",
       "license": "MIT"
+    },
+    {
+      "name": "graphs-and-shit",
+      "source": "./skills/graphs-and-shit",
+      "description": "Pull the latest data from a survey, sheet, API, database or file and turn it into a shareable, editable Claude Doc with hand-drawn charts, each one screenshot-checked; refreshes the doc when the data changes",
+      "version": "0.1.0",
+      "author": {
+        "name": "Obie Fernandez"
+      },
+      "keywords": [
+        "charts",
+        "data-visualization",
+        "reports",
+        "claude-docs",
+        "artifacts",
+        "surveys",
+        "google-forms"
+      ],
+      "category": "productivity",
+      "homepage": "https://github.com/obie/skills",
+      "license": "MIT"
     }
   ]
 }

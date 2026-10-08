@@ -77,6 +77,28 @@ Run the deletion test from Chad Fowler's *Regenerative Software* on one componen
 
 **Invoke with:** `/deletion-test` or Claude invokes automatically when asked to regenerate a module from spec or make a component replaceable
 
+### Graphs and Shit
+
+Pull the latest data from wherever it lives and turn it into a shareable, editable Claude Doc with hand-drawn charts. The lead states the answer with its numbers. Each section gets one chart for one finding, and every chart is checked in a screenshot before the doc is called done. Run it again later and it refreshes the same doc with new numbers.
+
+**When to use:**
+- Survey results that need to go in front of a team
+- A spreadsheet or query result that people will discuss and comment on
+- Numbers that keep changing, such as responses trickling in, where the doc should be refreshed rather than rebuilt
+
+**What it covers:**
+- Pulling fresh data (Google Forms, Sheets, CSV, a database, an API) and tallying it with a script
+- A short brief per chart: the reader, the finding, the form a pro would draw
+- Creating the doc from the Docs Artifact type and landing an outline the reader can watch fill
+- Hand-rolled `claude.Visualize` charts: grey first, one accent, values on the marks, everything computed from rows
+- Screenshot review and redraws
+- Keeping anonymous data anonymous
+- Refreshing chart rows and prose numbers without clobbering people's edits
+
+Requires the Artifact tool and the Claude Docs connector. Without the connector it falls back to a single HTML Artifact.
+
+**Invoke with:** `/graphs-and-shit <data source>` or Claude invokes automatically when asked to chart results into something shareable
+
 ## How It Works
 
 Skills are stored in `skills/<skill-name>/SKILL.md` format. Each skill:

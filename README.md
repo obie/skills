@@ -99,6 +99,36 @@ Requires the Artifact tool and the Claude Docs connector. Without the connector 
 
 **Invoke with:** `/graphs-and-shit <data source>` or Claude invokes automatically when asked to chart results into something shareable
 
+### beat-the-benchmark-website
+
+Build a site that beats a named benchmark site on every dimension the owner cares about, and prove it.
+
+**When to use:** a new or rebuilt website with a reference site to beat, and an owner who wants evidence, not opinions.
+
+**Key patterns:**
+- Audit the benchmark into a scored QC matrix before building
+- One generated source of truth; owner voting galleries for every visual choice
+- Parallel builders, one integrator; QC and Codex review an immutable preview
+- Scope freeze, then byte-parity check of production against the verified build
+- Playwright scripts: screenshot matrix, decoded image ratio, tap targets, forbidden-token sweep, JSON-LD
+
+**Invoke with:** `/beat-the-benchmark-website <site> vs <benchmark>`
+
+### ai-character-imaging
+
+Keep one synthetic character recognisably the same across many images and short video loops.
+
+**When to use:** a virtual artist, mascot or brand persona that needs a consistent face across plates and motion.
+
+**Key patterns:**
+- Canon identity pack of the newest approved face, plus an identity paragraph
+- Slot prompts; refs carry identity only; GPT Image edit with refs
+- Owner review rounds; promote approved picks to ref #1
+- Upscale with face enhancement off; patch defects with a feathered merge
+- Kling image-to-video loops with the seam scored by frame difference
+
+**Invoke with:** `/ai-character-imaging` or Claude invokes automatically for consistent-character generation
+
 ## How It Works
 
 Skills are stored in `skills/<skill-name>/SKILL.md` format. Each skill:

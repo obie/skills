@@ -115,6 +115,48 @@
       "category": "productivity",
       "homepage": "https://github.com/obie/skills",
       "license": "MIT"
+    },
+    {
+      "name": "beat-the-benchmark-website",
+      "source": "./skills/beat-the-benchmark-website",
+      "description": "Build a website that measurably beats a named benchmark site: audit the benchmark, owner voting galleries, a parallel agent build with one integrator, QC and Codex review of an immutable preview, then a scope freeze and byte-parity production ship",
+      "category": "development",
+      "keywords": [
+        "website",
+        "qc",
+        "playwright",
+        "cloudflare-pages",
+        "agent-teams",
+        "review",
+        "astro"
+      ],
+      "version": "1.0.0",
+      "author": {
+        "name": "Obie Fernandez"
+      },
+      "homepage": "https://github.com/obie/skills",
+      "license": "MIT"
+    },
+    {
+      "name": "ai-character-imaging",
+      "source": "./skills/ai-character-imaging",
+      "description": "Keep one AI character or persona consistent across stills and motion loops: canon identity pack, prompt slots, owner review rounds, filter workarounds, waxy-free upscaling, feathered patch merges and seamless Kling loops",
+      "category": "creative",
+      "keywords": [
+        "ai-images",
+        "character-consistency",
+        "gpt-image",
+        "kling",
+        "fal",
+        "persona",
+        "video-loops"
+      ],
+      "version": "1.0.0",
+      "author": {
+        "name": "Obie Fernandez"
+      },
+      "homepage": "https://github.com/obie/skills",
+      "license": "MIT"
     }
   ]
 }

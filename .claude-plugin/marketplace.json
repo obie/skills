@@ -178,6 +178,18 @@
       },
       "homepage": "https://github.com/obie/skills",
       "license": "MIT"
+    },
+    {
+      "name": "product-design-harness",
+      "source": "./skills/product-design-harness",
+      "description": "Product decision review across users, evidence and business viability. Known source limitations: whitespace-padded prohibited overrides may be accepted and three referenced SVGs are missing; source repair PR23/24 remain unmerged. Not a hosted service or host/model-test claim.",
+      "author": {
+        "name": "cis2042"
+      },
+      "keywords": ["product-design", "product-management", "ux", "evidence", "decision-making"],
+      "category": "productivity",
+      "homepage": "https://github.com/cis2042/ux3-product-design-harness",
+      "license": "MIT"
     }
   ]
 }

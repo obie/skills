@@ -146,6 +146,19 @@ Keep one standing page of every decision Claude needs from you, instead of quest
 
 **Invoke with:** `/decision-docket` or Claude invokes automatically when it has a decision to put to you during long-running work
 
+### agent-qa testing
+
+Validate, run, and triage natural-language web and mobile tests with [agent-qa](https://github.com/vostride/agent-qa), including advanced memidex memory and self-improvement.
+
+**When to use:**
+- Checking an existing agent-qa test or suite before execution
+- Running a selected application flow and producing a JUnit report
+- Investigating a failed or healed run using recorded evidence and knowledge
+
+**Invoke with:** `/agent-qa-testing:agent-qa-testing` when the project uses agent-qa or you specifically choose it.
+
+Requires a separate agent-qa installation, Node.js 24+, and model-provider configuration. The skill instructions are MIT; agent-qa is FSL-1.1-ALv2, and provider costs may apply.
+
 ## How It Works
 
 Skills are stored in `skills/<skill-name>/SKILL.md` format. Each skill:

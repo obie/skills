@@ -178,6 +178,26 @@
       },
       "homepage": "https://github.com/obie/skills",
       "license": "MIT"
+    },
+    {
+      "name": "agent-qa-testing",
+      "source": "./skills/agent-qa-testing",
+      "description": "Validate, run, and triage agent-qa web and mobile tests with advanced memidex memory and self-improvement",
+      "version": "0.1.0",
+      "author": {
+        "name": "vostride"
+      },
+      "keywords": [
+        "agent-qa",
+        "testing",
+        "regression",
+        "web",
+        "android",
+        "ios"
+      ],
+      "category": "development",
+      "homepage": "https://vostride.com/docs/agent-qa/cli",
+      "license": "MIT"
     }
   ]
 }
